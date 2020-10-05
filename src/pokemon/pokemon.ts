@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-
+import pokeapi from './pokeapi.js';
 export interface IPokemon {
   id: number;
   weight: number;
@@ -17,6 +17,19 @@ export interface IResponse {
     };
   };
 }
+export interface PokemonListItem {
+  name: String;
+  url: string;
+}
+
+export interface ResponsePokemonList {
+  count: number;
+  next: String;
+  previous: String;
+  results: PokemonListItem[]
+}
+
+
 
 export class Pokemon {
   url = 'https://pokeapi.co/api/v2/pokemon';
@@ -26,8 +39,28 @@ export class Pokemon {
    * @param names list of names
    */
   public async getPokemonsByNameList(names: string[]): Promise<IPokemon[]> {
-    // TO BE IMPLEMENTED
-    return null;
+
+    let finalList: IPokemon[] = [];
+    for (let i = 0; i < names.length; i++) {
+      if (this.checkNameValid) {
+        let pokemonName = names[i]
+        const res = await fetch(this.url+'/'+pokemonName);
+        const pokemonInfo = await res.json();
+        finalList[i] = {
+          id: pokemonInfo.id,
+          weight: pokemonInfo.weight,
+          height: pokemonInfo.height,
+          moves: pokemonInfo.moves,
+        }
+      } else {
+        throw new Error('Name Invalid')
+      }
+
+    }
+
+
+
+    return finalList;
   }
 
   /**
@@ -49,6 +82,10 @@ export class Pokemon {
    * @param name string
    */
   checkNameValid(name: string) {
+    
+    
+   
+  
     return name.length > 0;
   }
 }

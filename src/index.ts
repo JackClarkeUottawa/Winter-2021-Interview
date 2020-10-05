@@ -3,7 +3,7 @@ import { Pokemon } from './pokemon/pokemon';
 
 const app = express();
 app.use(express.json());
-const port = 8001; // default port to listen
+const port = 8002; // default port to listen
 
 // define a route handler for the default home page
 app.get('/', async (request: any, response: any) => {
